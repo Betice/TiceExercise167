@@ -1,0 +1,269 @@
+/**Author: Brendon Tice
+ * Course: CPT 167
+ * Purpose: Menu for buying items from a store
+ *CreateDate: February 20, 2020**/
+
+package edu.cpt167.tice.participation6;
+
+import java.util.Scanner;
+
+public class SodnotZod6 
+{
+	
+	//CONSTANTS
+	
+	public static final double DISCOUNT_RATE_MEMBER= .15;
+	public static final double DISCOUNT_RATE_SENIOR= .25;
+	public static final double DISCOUNT_RATE_NONE= 0.0;
+	public static final double TAX_RATE= .075;
+	public static final int MAX_PURCHASE_COUNT = 1;
+	public final static String OPTION_MEMBER = "MEMBER";
+	public final static String OPTION_SENIOR = "SENIOR";
+	public final static String OPTION_NONE = "No Discount";
+	public final static String MENU_QUIT = "QUIT";
+	public final static String ITEM_A_NAME = "Hammer";
+	public final static String ITEM_B_NAME = "Nails";
+	public final static String ITEM_C_NAME = "Tape";
+	public final static double ITEM_A_PRICE = 5;
+	public final static double ITEM_B_PRICE = 10;
+	public final static double ITEM_C_PRICE = 15;
+	public final static int RESET_VALUE = 0;
+
+	public static void main(String[] args)
+	{	
+	
+		//Variables
+		
+		double itemPrice = 0.0;
+		String itemName = "";
+		int howMany = 0;
+		char menuSelection = ' ';
+		char itemSelection = ' ';
+		double discountAmt = 0.0;
+		double discountPrice = 0.0;
+		double discountRate = 0.0;
+		double subTotal = 0.0;
+		double tax = 0.0;
+		double totalCost = 0.0;
+		double grandTotal = 0.0;
+		int memberCount = 0;
+		int seniorCount = 0;
+		int noDiscountCount = 0;
+		String userName;
+		int hammer_Count = 0; 
+		int nails_Count = 0; 
+		int tape_Count = 0;
+		int purchaseCounter = 0;
+		
+		//Create a scanner
+		Scanner input= new Scanner(System.in);
+		
+		//WELCOME BANNER
+		
+		displayWelcomeBanner();
+				
+		//USERNAME
+		
+		userName = getUserName(input);
+				
+		//PRIME READ
+				
+		menuSelection = validateMainMenu(input);
+		
+		//WHILE-RUN
+				
+		while(menuSelection != 'Q') 
+		{
+			while(purchaseCounter < MAX_PURCHASE_COUNT)
+			{
+				itemSelection = validateItemMenu(input);
+				howMany = validatehowMany(input);	
+				
+				if (menuSelection == 'A')
+				{
+					discountRate = DISCOUNT_RATE_MEMBER;
+					memberCount++;
+				}
+				else if (menuSelection == 'B')
+				{
+					discountRate = DISCOUNT_RATE_SENIOR;
+					seniorCount++;
+				}
+				else
+				{
+					discountRate = DISCOUNT_RATE_NONE;
+					noDiscountCount++;
+				}
+				
+				if (itemSelection == 'A')
+				{
+					itemName = ITEM_A_NAME;
+					itemPrice = ITEM_A_PRICE;
+					hammer_Count++;
+				}
+				else if (itemSelection == 'B')
+				{
+					itemName = ITEM_B_NAME;
+					itemPrice = ITEM_B_PRICE;
+					nails_Count++;
+				}
+				else
+				{
+					itemName = ITEM_C_NAME;
+					itemPrice = ITEM_C_PRICE;
+					tape_Count++;
+				}
+				discountAmt= itemPrice * discountRate;
+				discountPrice = itemPrice - discountAmt;
+				subTotal= howMany * discountPrice;
+				tax = subTotal* TAX_RATE;
+				totalCost = subTotal+ tax;
+				grandTotal = grandTotal + totalCost;
+				
+				displayItemReceipt(itemName,itemPrice,discountPrice,howMany,subTotal,tax,totalCost);
+				
+				purchaseCounter++;
+			}
+			purchaseCounter = RESET_VALUE;
+			menuSelection = validateMainMenu(input);
+		}
+		if (grandTotal > 0.0)
+		{
+			displayFinalReport(userName, memberCount, seniorCount, noDiscountCount, hammer_Count, nails_Count, tape_Count, grandTotal);
+		}
+		
+		displayFarewellMessage();
+		
+		//close scanner
+		input.close();	
+	}//END OF MAIN METHOD
+	
+	//WELCOME BANNER
+	
+	public static void displayWelcomeBanner()
+	{
+		System.out.println("*******************************************");
+		System.out.println("Welcome to the Sod Store!");
+		System.out.println("Buy your supplies here!");
+		System.out.println("\n~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+	}	
+	//FAREWELL MESSAGE
+		
+	public static void displayFarewellMessage()
+	{
+		System.out.println("Thank you for using the program");
+		System.out.println("Have a good day!");
+	}
+	
+	public static char validateMainMenu(Scanner borrowedInput) //scanner declared and renamed
+	{
+	//Discount Menu
+		char menuSelection;
+		System.out.println("\n~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+		System.out.println("DISCOUNT MENU");
+		System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+		System.out.printf("%-4s%-18s\n", "[A]", OPTION_MEMBER);
+		System.out.printf("%-4s%-18s\n", "[B]", OPTION_SENIOR);
+		System.out.printf("%-4s%-18s\n", "[C]", OPTION_NONE);
+		System.out.printf("%-4s%-18s\n", "[Q]", MENU_QUIT);
+		System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+		System.out.println("Enter your selection here: ");
+		menuSelection = borrowedInput.next().toUpperCase().charAt(0);
+	
+		//TEST MENUSELECTION
+		while(menuSelection!= 'A'&& menuSelection!= 'B'&& menuSelection!= 'C'&& menuSelection!= 'Q') {
+			System.out.println("\n~~~Invalid selection.~~~\n");
+			System.out.println("\n~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.println("DISCOUNT MENU");
+			System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.printf("%-4s%-18s\n", "[A]", OPTION_MEMBER);
+			System.out.printf("%-4s%-18s\n", "[B]", OPTION_SENIOR);
+			System.out.printf("%-4s%-18s\n", "[C]", OPTION_NONE);
+			System.out.printf("%-4s%-18s\n", "[Q]", MENU_QUIT);
+			System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.println("Enter your selection here: ");
+			menuSelection = borrowedInput.next().toUpperCase().charAt(0);
+		}
+		return menuSelection;		
+	}
+
+	public static char validateItemMenu(Scanner borrowedInput)
+	{
+		char itemSelection;
+		System.out.println("\n~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+		System.out.println("PRODUCT MENU");
+		System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+		System.out.printf("%-4s%-18s\n", "[A]", ITEM_A_NAME);
+		System.out.printf("%-4s%-18s\n", "[B]", ITEM_B_NAME);
+		System.out.printf("%-4s%-18s\n", "[C]", ITEM_C_NAME);
+		System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+		System.out.println("Enter your selection here: ");
+		itemSelection= borrowedInput.next().toUpperCase().charAt(0);	
+		
+		while(itemSelection!= 'A'&& itemSelection!= 'B'&& itemSelection!= 'C') {
+			System.out.println("\\n~~~Invalid selection.~~~\\n");
+			System.out.println("\n~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.println("PRODUCT MENU");
+			System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.printf("%-4s%-18s\n", "[A]", ITEM_A_NAME);
+			System.out.printf("%-4s%-18s\n", "[B]", ITEM_B_NAME);
+			System.out.printf("%-4s%-18s\n", "[C]", ITEM_C_NAME);
+			System.out.println("~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.println("Enter your selection here: ");
+			itemSelection= borrowedInput.next().toUpperCase().charAt(0);
+		}	
+		return itemSelection; 
+	}
+	
+	public static void displayItemReceipt(String borrowedItemName, double borrowedItemPrice, double borrowedDiscountPrice, 
+			double borrowedHowMany, double borrowedSubTotal, double borrowedTax, double borrowedTotalCost)
+	{
+		System.out.println("\n ITEM RECEIPT");
+		System.out.println("\n**************************************************");
+		System.out.printf("%-16s%s\n", "Item Name: ", borrowedItemName);
+		System.out.printf("%-16s%s%.2f\n", "Item Price:" ,"$ ", borrowedItemPrice);
+		System.out.printf("%s%.2f\n", "Discount Price: $ ", borrowedDiscountPrice);
+		System.out.printf("%-18s%.0f\n", "Item Amount: ", borrowedHowMany);
+		System.out.printf("%-16s%s%.2f\n", "Subtotal: ","$ ", borrowedSubTotal);
+		System.out.printf("%-16s%s%.2f\n", "Tax: ","$ ", borrowedTax);
+		System.out.printf("%-16s%s%.2f\n","Total Cost: ","$ ", borrowedTotalCost);
+	}
+	public static void displayFinalReport(String borrowedUserName, int borrowedMemberCount, int borrowedSeniorCount,int borrowedNoDiscountCount,
+			int borrowedHammer_Count, int borrowedNails_Count, int borrowedTape_Count, double borrowedGrandTotal)
+	{
+		System.out.println("\nFINAL REPORT");
+		System.out.println("\n**************************************************");
+		System.out.printf("%-18s%d\n", "Member Count: ", borrowedMemberCount);
+		System.out.printf("%-18s%d\n", "Senior Count: ", borrowedSeniorCount);
+		System.out.printf("%-18s%d\n", "None Count: ", borrowedNoDiscountCount);
+		System.out.printf("%-18s%d\n", "Hammer Count: ", borrowedHammer_Count);
+		System.out.printf("%-18s%d\n", "Nails Count: ", borrowedNails_Count);
+		System.out.printf("%-18s%d\n", "Tape Count: ", borrowedTape_Count);
+		System.out.printf("%-18s%.2f\n", "Grand Total: ", borrowedGrandTotal);
+	}
+	
+	public static String getUserName(Scanner input)
+	{
+		String userName = "";
+		System.out.println("What is your first name?");
+		userName = input.next();
+		return userName;
+	}
+	
+	public static int validatehowMany(Scanner input)
+	{
+		int howMany;
+		System.out.print("\nPlease enter the item amount: ");
+		howMany= input.nextInt();
+		
+		while(howMany <= 0)
+		{
+			System.out.println("\n~~~Number cannot be less than 1.~~~\n");
+			System.out.println("\n~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~");
+			System.out.print("\nPlease enter the item amount: ");
+			howMany= input.nextInt();
+		}
+		return howMany;
+	}	
+	
+}//END OF CLASS
